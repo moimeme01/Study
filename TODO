@@ -1,0 +1,12 @@
+Ajouter un bouton:
+    -> Nouveau cours
+    -> Show percentage de complétion des cours (varie en fonction de la semaine actuelle)
+    -> Ajouter un label de la semaine actuelle
+
+Faire les graphes:
+
+Embellir les boutons:
+
+Checker les erreurs:
+    -> Fermeture de session lorsque le cours de début et de fin sont différents: OK
+
