@@ -14,9 +14,8 @@ total = pd.read_csv("/Users/thibaultvanni/PycharmProjects/Study/hours_done/TOTAL
 
 for filename in os.listdir("/Users/thibaultvanni/PycharmProjects/Study/hours_done"):
     if "Done" not in os.path.join("/Users/thibaultvanni/PycharmProjects/Study/hours_done", filename):
-        if filename != "TOTALSTUDY.csv":
+        if filename not in  ["TOTALSTUDY.csv", ".DS_Store"]:
             file = pd.read_csv(os.path.join("/Users/thibaultvanni/PycharmProjects/Study/hours_done", filename), encoding='utf-8')
-
             file["Course"] = filename
             total = pd.concat([file, total], ignore_index=True)
 

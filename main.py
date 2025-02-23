@@ -150,12 +150,12 @@ def time_from_beginning(window):
         lines = []
         for line in file:
             lines.append(line)
-
         start_time = datetime.strptime(lines[0].strip(), '%d/%m/%y %H:%M:%S')
         course = lines[1].strip()
     difference = now - start_time
     diffTime = Label(window, text="You've started a " + course + " session " + str(difference) + " ago", fg="red")
     diffTime.grid(row=4, column=0, columnspan=4)
+    diffTime.after(1000, diffTime.destroy)
 
 
 def time_to_hms(seconds):
@@ -278,10 +278,16 @@ def start_session(combo_box_start, window):
     selected_value = combo_box_start.get()  # Get the selected value
     print(f"Selected: {selected_value}")
 
-    with open("/Users/thibaultvanni/PycharmProjects/Study/session_running", "w") as file:
-        file.write(now + "\n")
-        file.write(combo_box_start.get() + "\n")
-        file.write("session_running = True\n")
+
+    with open("/Users/thibaultvanni/PycharmProjects/Study/session_running", "r+") as file:
+        print(file.readlines())
+        if "\nsession_running = True\n" in file.readlines():
+            messagebox.showerror("Attention", "You have already started a session running.")
+        elif "session_running = True\n" not in file.readlines():
+            print(True)
+            file.write(now + "\n")
+            file.write(combo_box_start.get() + "\n")
+            file.write("session_running = True\n")
     print("You just started a " + combo_box_start.get() + " session at " + now)
 
     startText = Label(window, text= "You just started a " + combo_box_start.get() + " session at " + now, fg="green")
@@ -337,7 +343,7 @@ def check(moment, value, window):
     print("Value end session = ", value)
     if moment == "End":
         if len(lines) != 3:
-            messagebox.showwarning("ATTENTION", "You didn't stat any session.")
+            messagebox.showwarning("ATTENTION", "You didn't start any session.")
             return False
         if lines[1].strip() != value:
             print('You cannot close a session in a different course than: '+ lines[1])
@@ -347,7 +353,7 @@ def check(moment, value, window):
         pass
     return True
 
-def endSession(combo_box_end, window):
+def endSessionChecked(combo_box_end, window):
     selected_value = combo_box_end.get()
     print("Selected:", selected_value)
 
@@ -489,7 +495,7 @@ def main():
     endText.grid(row=1, column=2, columnspan=2, sticky="w")
     combo_box_end = ttk.Combobox(home_window, values=["Mécanique des Milieux Continus", "Thermodynamique", "Fabrication Mécanique", "Télécommunications", "TEST"])
     combo_box_end.grid(row=2, column=2, sticky="w")
-    combo_box_end.bind("<<ComboboxSelected>>", lambda event: endSession(combo_box_end, home_window))
+    combo_box_end.bind("<<ComboboxSelected>>", lambda event: endSessionChecked(combo_box_end, home_window))
 
     sessionRunning = ttk.Button(home_window, text="Session running", command= lambda: time_from_beginning(home_window))
     sessionRunning.grid(row=2, column=4, sticky="w")
