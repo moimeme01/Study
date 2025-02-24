@@ -150,12 +150,17 @@ def time_from_beginning(window):
         lines = []
         for line in file:
             lines.append(line)
+    if "session_running = False\n" not in lines:
         start_time = datetime.strptime(lines[0].strip(), '%d/%m/%y %H:%M:%S')
         course = lines[1].strip()
-    difference = now - start_time
-    diffTime = Label(window, text="You've started a " + course + " session " + str(difference) + " ago", fg="red")
-    diffTime.grid(row=4, column=0, columnspan=4)
-    diffTime.after(1000, diffTime.destroy)
+        difference = now - start_time
+        diffTime = Label(window, text="You've started a " + course + " session " + str(difference) + " ago", fg="red")
+        diffTime.grid(row=5, column=0, columnspan=4)
+        diffTime.after(2000, diffTime.destroy)
+    else:
+        diffTime = Label(window, text="You didn't start any course", fg="red")
+        diffTime.grid(row=5, column=0, columnspan=4)
+        diffTime.after(2000, diffTime.destroy)
 
 
 def time_to_hms(seconds):
@@ -283,20 +288,21 @@ def start_session(combo_box_start, window):
         content = file.read()  # Read the entire file
         print(content)  # Debugging step to check file contents
 
-        if "session_running = True" in content:  # Check if the string exists
+        if "session_running = True" in content and "session_running = False" not in content:  # Check if the string exists
             print("Session is running!")
             messagebox.showerror("Attention", "You have already started a session running.")
 
         else:
             print(True)
-            file.seek(0, 2)
+            file.seek(0)  # Move to the beginning
+            file.truncate()  # Remove all content
             file.write(now + "\n")
             file.write(combo_box_start.get() + "\n")
             file.write("session_running = True\n")
             print("You just started a " + combo_box_start.get() + " session at " + now)
 
             startText = Label(window, text= "You just started a " + combo_box_start.get() + " session at " + now, fg="green")
-            startText.grid(row=4, column=0, columnspan=4)
+            startText.grid(row=5, column=0, columnspan=5)
             startText.after(3000, startText.destroy)
 
     return combo_box_start.get(), now, True
@@ -344,10 +350,12 @@ def check(moment, value, window):
         lines = []
         for line in file:
             lines.append(line)
-    print("lines[1]: ", lines[1].strip())
+    print("lines: ", lines)
     print("Value end session = ", value)
+    print(len(lines))
     if moment == "End":
-        if len(lines) != 3:
+        if len(lines) < 3 or "session_running = False\n" in lines:
+            print(True)
             messagebox.showwarning("ATTENTION", "You didn't start any session.")
             return False
         if lines[1].strip() != value:
@@ -461,6 +469,22 @@ def choosedTPorCM(window, TPorCM):
     workDonecombobox.bind("<<ComboboxSelected>>", lambda event: update_graph2(event, window, TPorCM, workDonecombobox))
 
 
+def getText(inputText):
+    course_name = inputText.get()
+    print(f'{course_name=!r}')
+    course_name_file = course_name + ".csv"
+    if course_name_file in os.listdir("/Users/thibaultvanni/PycharmProjects/Study/hours_done"):
+        messagebox.showwarning("ATTENTION", "Course " + str(course_name) + " already exists.\n Please choose a different course.")
+    else:
+        mydataset = {'Start': [],
+                     'End': [],
+                     'Delta': []}
+        myvar = pd.DataFrame(mydataset)
+        path = "/Users/thibaultvanni/PycharmProjects/Study/hours_done/" + str(course_name) + ".csv"
+        myvar.to_csv(path, mode='w', index=True, header=True)
+
+
+
 def graph_window(master):
     global canvas
     graphWindow = Toplevel(master)
@@ -481,6 +505,21 @@ def graph_window(master):
     CMorTPcombobox.bind("<<ComboboxSelected>>",lambda event: choosedTPorCM(graphWindow, CMorTPcombobox.get()))
 
     Button(graphWindow, text="Total amount of study", command=lambda:total_study_time(graphWindow)).grid(row=3, column=4, columnspan=2, sticky="w")
+
+
+def newCourseWindow(master):
+    newCourseWindow = Toplevel(master)
+    newCourseWindow.title("New course window")
+    Label(newCourseWindow, text="Here you can enter a new course. \nFirst enter the course name, then select the calendar of the course").grid(column=0, row=0, columnspan=4)
+
+    Label(newCourseWindow, text="Insert the course name:").grid(column=0, row=3)
+
+    inputText = Entry(newCourseWindow, width=30)
+    inputText.grid(column=1, row=3)
+
+    Button(newCourseWindow, text="Enter", command=lambda:getText(inputText)).grid(column=2, row=3)
+
+
 
 
 def main():
@@ -518,7 +557,9 @@ def main():
 
     reset_button = Button(home_window, text="Reset all", command=confirm)
     reset_button.grid(row=3, column=3)
-    
+
+    Button(home_window, text="New course", command=lambda: newCourseWindow(home_window)).grid(row=4, column=0)
+
     home_window.mainloop()
 
 
