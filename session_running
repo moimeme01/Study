@@ -1,12 +1,6 @@
-23/02/25 19:13:11
+24/02/25 10:04:42
 TEST
 session_running = True
-23/02/25 19:15:41
+24/02/25 10:09:46
 TEST
-session_running = True
-23/02/25 19:17:00
-TEST
-session_running = True
-23/02/25 19:17:34
-TEST
-session_running = True
+session_running = False

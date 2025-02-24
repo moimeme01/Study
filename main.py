@@ -280,19 +280,24 @@ def start_session(combo_box_start, window):
 
 
     with open("/Users/thibaultvanni/PycharmProjects/Study/session_running", "r+") as file:
-        print(file.readlines())
-        if "\nsession_running = True\n" in file.readlines():
+        content = file.read()  # Read the entire file
+        print(content)  # Debugging step to check file contents
+
+        if "session_running = True" in content:  # Check if the string exists
+            print("Session is running!")
             messagebox.showerror("Attention", "You have already started a session running.")
-        elif "session_running = True\n" not in file.readlines():
+
+        else:
             print(True)
+            file.seek(0, 2)
             file.write(now + "\n")
             file.write(combo_box_start.get() + "\n")
             file.write("session_running = True\n")
-    print("You just started a " + combo_box_start.get() + " session at " + now)
+            print("You just started a " + combo_box_start.get() + " session at " + now)
 
-    startText = Label(window, text= "You just started a " + combo_box_start.get() + " session at " + now, fg="green")
-    startText.grid(row=4, column=0, columnspan=4)
-    startText.after(3000, startText.destroy)
+            startText = Label(window, text= "You just started a " + combo_box_start.get() + " session at " + now, fg="green")
+            startText.grid(row=4, column=0, columnspan=4)
+            startText.after(3000, startText.destroy)
 
     return combo_box_start.get(), now, True
 
