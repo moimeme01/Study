@@ -1,12 +1,15 @@
 Ajouter un bouton:
-    -> Nouveau cours
+    -> Nouveau cours <==> EN COURS. Doit rajouter la possibiliter de faire le calendrier du cours rajouté
     -> Show percentage de complétion des cours (varie en fonction de la semaine actuelle)
-    -> Ajouter un label de la semaine actuelle
+    -> Ajouter un label de la semaine actuelle au dessus de la fenêtre.
+    -> Liste de To Do des cours (liste avec cours : Cm Tp...)
+
 
 Faire les graphes:
+    -> Ajouter des stats globales: moyenne journalières (bar plot avec diff couleurs sur la meme barre pour les différents cours)
+    -> A faire et fait globalement (Deux barplots avec différentes couleurs par cours. A voir comment l'organiser)
+
 
 Embellir les boutons:
 
 Checker les erreurs:
-    -> Fermeture de session lorsque le cours de début et de fin sont différents: OK
-

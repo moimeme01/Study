@@ -63,13 +63,17 @@ myvar = pd.DataFrame(mydataset)
 myvar.to_csv('/Users/thibaultvanni/PycharmProjects/Study/hours_done/Thermodynamique.csv', mode='w', index=True, header=True)
 
 mydataset = {'Start': [],
+             'Delta': []}
+myvar = pd.DataFrame(mydataset)
+myvar.to_csv('/Users/thibaultvanni/PycharmProjects/Study/hours_done/TOTALSTUDY.csv', mode='w', index=True, header=True)
+"""
+
+"""
+
+mydataset = {'Start': [],
              'End': [],
              'Delta': []}
 myvar = pd.DataFrame(mydataset)
 myvar.to_csv('/Users/thibaultvanni/PycharmProjects/Study/hours_done/TEST.csv', mode='w', index=True, header=True)
 
-mydataset = {'Start': [],
-             'Delta': []}
-myvar = pd.DataFrame(mydataset)
-myvar.to_csv('/Users/thibaultvanni/PycharmProjects/Study/hours_done/TOTALSTUDY.csv', mode='w', index=True, header=True)
 """

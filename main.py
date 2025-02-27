@@ -9,7 +9,7 @@ import pandas as pd
 import shutil
 import subprocess
 from functools import partial  # Helps pass extra arguments to functions
-
+import os
 
 
 from tkinter import *
@@ -61,30 +61,34 @@ def graph_work_quantity(course, actual_week_number, TPorCM, window):
 
     theoricalTP = []
     theoricalCM = []
+    DoneTP = []
+    DoneCM = []
     courseNEW = "".join(course.split(" "))
     file = "/Users/thibaultvanni/PycharmProjects/Study/hours_done/Done" + courseNEW + ".csv"
     df = pd.read_csv(file)
-    DoneTP = df["TP"]
-    DoneCM = df["CM"]
-    doneCourse = "Done"+course
     passed_week = []
-    numberofTP = 0
-    numberofCM = 0
+    numberofTPTheorical = 0
+    numberofCMTheorical = 0
+    numberofTPDone = 0
+    numberofCMDone = 0
     print(TPorCM)
+
     for week_number in getattr(course_calendar, courseNEW).keys():
         week_number_temporary = int(week_number.split("S")[1])
-        if TPorCM == "TP" and week_number_temporary <= actual_week_number :
+        if TPorCM == "TP" and week_number_temporary <= actual_week_number:
+            DoneTP.append(sum(df["TP"][:week_number_temporary]))
             if TPorCM in getattr(course_calendar, courseNEW)[week_number]:
-                numberofTP += getattr(course_calendar, courseNEW)[week_number].count("TP")
-                theoricalTP.append(numberofTP)
+                numberofTPTheorical += getattr(course_calendar, courseNEW)[week_number].count("TP")
+                theoricalTP.append(numberofTPTheorical)
                 passed_week.append(week_number)
             else:
                 theoricalTP.append(0)
                 passed_week.append(week_number)
         if TPorCM == "CM/Théorie" and week_number_temporary <= actual_week_number :
+            DoneCM.append(sum(df["CM"][:week_number_temporary]))
             if "CM" in getattr(course_calendar, courseNEW)[week_number]:
-                numberofCM += getattr(course_calendar, courseNEW)[week_number].count("CM")
-                theoricalCM.append(numberofCM)
+                numberofCMTheorical += getattr(course_calendar, courseNEW)[week_number].count("CM")
+                theoricalCM.append(numberofCMTheorical)
                 passed_week.append(week_number)
             else:
                 theoricalCM.append(0)
@@ -97,7 +101,7 @@ def graph_work_quantity(course, actual_week_number, TPorCM, window):
     if TPorCM == "CM/Théorie":
         fig, ax = plt.subplots()
         fig.subplots_adjust(hspace=0.6)
-        ax.bar(x - width / 2, DoneCM[:len(passed_week)], width, label='CM or Theory done')
+        ax.bar(x - width / 2, DoneCM, width, label='CM or Theory done')
         ax.bar(x + width / 2, theoricalCM, width, label='CM to do')
 
         ax.set_ylabel('#')
@@ -122,7 +126,7 @@ def graph_work_quantity(course, actual_week_number, TPorCM, window):
 
     elif TPorCM == "TP":
         fig, ax = plt.subplots()
-        ax.bar(x - width / 2, DoneTP[:len(passed_week)], width, label='TP done')
+        ax.bar(x - width / 2, DoneTP, width, label='TP done')
         ax.bar(x + width / 2, theoricalTP, width, label='TP to do')
 
         ax.set_ylabel('#')
