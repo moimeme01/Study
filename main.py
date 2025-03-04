@@ -529,40 +529,47 @@ def newCourseWindow(master):
 def main():
     home_window = Tk()
     home_window.title("Study Statistics")
+    """
+    The actual dimensions of the window are: 
+    columns = 5
+    lines = 4
+    """
 
     hometext = Label(home_window, text='Welcome to this app. Here you can set your work sessions.')
-    hometext.grid(row=0, column=0, columnspan = 4)
+    hometext.grid(row=0, column=0, columnspan = 5)
+
+    weektext = Label(home_window, text=f'We actually are in S{which_week()}').grid(row=1, column=0, columnspan = 5)
 
     startText = Label(home_window, text='Do you want to start a session?')
-    startText.grid(row=1, column=0, columnspan=2, sticky="w")
+    startText.grid(row=2, column=0, columnspan=2, sticky="w")
     combo_box_start = ttk.Combobox(home_window, values=["Mécanique des Milieux Continus", "Thermodynamique", "Fabrication Mécanique", "Télécommunications", "TEST"])
-    combo_box_start.grid(row=2, column=0, sticky="w")
+    combo_box_start.grid(row=3, column=0, sticky="w")
     combo_box_start.bind("<<ComboboxSelected>>", lambda event: start_session(combo_box_start, home_window))
 
     endText = Label(home_window, text='Do you want to end a session?')
-    endText.grid(row=1, column=2, columnspan=2, sticky="w")
+    endText.grid(row=2, column=2, columnspan=2, sticky="w")
     combo_box_end = ttk.Combobox(home_window, values=["Mécanique des Milieux Continus", "Thermodynamique", "Fabrication Mécanique", "Télécommunications", "TEST"])
-    combo_box_end.grid(row=2, column=2, sticky="w")
+    combo_box_end.grid(row=3, column=2, sticky="w")
     combo_box_end.bind("<<ComboboxSelected>>", lambda event: endSessionChecked(combo_box_end, home_window))
 
     sessionRunning = ttk.Button(home_window, text="Session running", command= lambda: time_from_beginning(home_window))
-    sessionRunning.grid(row=2, column=4, sticky="w")
+    sessionRunning.grid(row=3, column=4, sticky="w")
 
 
 
     graphButton = Button(home_window, text='Show graphs', command= lambda: graph_window(home_window))
-    graphButton.grid(row=3, column=0)
+    graphButton.grid(row=4, column=0)
 
     workButton = Button(home_window, text='Work done', command=lambda: goodJobWindow(home_window))
-    workButton.grid(row=3, column=1)
+    workButton.grid(row=4, column=1)
 
     closeButton = Button(home_window, text='Close', command=home_window.destroy)
-    closeButton.grid(row=3, column=2)
+    closeButton.grid(row=4, column=2)
 
     reset_button = Button(home_window, text="Reset all", command=confirm)
-    reset_button.grid(row=3, column=3)
+    reset_button.grid(row=4, column=3)
 
-    Button(home_window, text="New course", command=lambda: newCourseWindow(home_window)).grid(row=4, column=0)
+    Button(home_window, text="New course", command=lambda: newCourseWindow(home_window)).grid(row=5, column=0)
 
     home_window.mainloop()
 
