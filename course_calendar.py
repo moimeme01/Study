@@ -59,3 +59,16 @@ MécaniquedesMilieuxContinus = {"S1": ["CM"],
        "S12": ["TP", "CM"],
        "S13": ["TP", "CM"]}
 
+TEST = {"S1": ["CM"],
+        "S2": ["TP"],
+        "S3": ["TP", "CM"],
+        "S4": ["TP", "CM"],
+        "S5": ["TP", "CM"],
+        "S6": ["TP"],
+        "S7": ["TP", "CM"],
+        "S8": ["TP", "CM"],
+        "S9": ["CM"],
+        "S10": ["TP", "CM"],
+        "S11": ["TP"],
+        "S12": ["TP", "CM"],
+        "S13": ["CM"]}

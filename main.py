@@ -63,14 +63,12 @@ def graph_work_quantity(course, actual_week_number, TPorCM, window):
     theoricalCM = []
     DoneTP = []
     DoneCM = []
-    courseNEW = "".join(course.split(" "))
-    file = "/Users/thibaultvanni/PycharmProjects/Study/hours_done/Done" + courseNEW + ".csv"
-    df = pd.read_csv(file)
     passed_week = []
     numberofTPTheorical = 0
     numberofCMTheorical = 0
-    numberofTPDone = 0
-    numberofCMDone = 0
+    courseNEW = "".join(course.split(" "))
+    file = "/Users/thibaultvanni/PycharmProjects/Study/hours_done/Done" + courseNEW + ".csv"
+    df = pd.read_csv(file)
     print(TPorCM)
 
     for week_number in getattr(course_calendar, courseNEW).keys():
@@ -487,7 +485,8 @@ def getText(inputText):
         path = "/Users/thibaultvanni/PycharmProjects/Study/hours_done/" + str(course_name) + ".csv"
         myvar.to_csv(path, mode='w', index=True, header=True)
 
-
+def createNumberofTPandCM():
+    pass
 
 def graph_window(master):
     global canvas
@@ -523,6 +522,12 @@ def newCourseWindow(master):
 
     Button(newCourseWindow, text="Enter", command=lambda:getText(inputText)).grid(column=2, row=3)
 
+def TODOWindow(master):
+    TODOWindow = Toplevel(master)
+    TODOWindow.title("TODO in the courses")
+
+
+
 
 
 
@@ -535,13 +540,12 @@ def main():
     lines = 4
     """
 
-    hometext = Label(home_window, text='Welcome to this app. Here you can set your work sessions.')
-    hometext.grid(row=0, column=0, columnspan = 5)
+    Label(home_window, text='Welcome to this app. Here you can set your work sessions.').grid(row=0, column=0, columnspan = 5)
 
-    weektext = Label(home_window, text=f'We actually are in S{which_week()}').grid(row=1, column=0, columnspan = 5)
+    Label(home_window, text=f'We actually are in S{which_week()}').grid(row=1, column=0, columnspan = 5)
 
-    startText = Label(home_window, text='Do you want to start a session?')
-    startText.grid(row=2, column=0, columnspan=2, sticky="w")
+    Label(home_window, text='Do you want to start a session?').grid(row=2, column=0, columnspan=2, sticky="w")
+
     combo_box_start = ttk.Combobox(home_window, values=["Mécanique des Milieux Continus", "Thermodynamique", "Fabrication Mécanique", "Télécommunications", "TEST"])
     combo_box_start.grid(row=3, column=0, sticky="w")
     combo_box_start.bind("<<ComboboxSelected>>", lambda event: start_session(combo_box_start, home_window))
@@ -570,6 +574,8 @@ def main():
     reset_button.grid(row=4, column=3)
 
     Button(home_window, text="New course", command=lambda: newCourseWindow(home_window)).grid(row=5, column=0)
+
+    Button(home_window, text="TODO", command=lambda: TODOWindow(home_window)).grid(row=5, column=1)
 
     home_window.mainloop()
 
