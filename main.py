@@ -22,6 +22,7 @@ import course_calendar
 # Global variable to store the canvas
 canvas = None
 toolbar = None
+button_list = []
 
 
 
@@ -157,7 +158,7 @@ def time_from_beginning(window):
         course = lines[1].strip()
         difference = now - start_time
         diffTime = Label(window, text="You've started a " + course + " session " + str(difference) + " ago", fg="red")
-        diffTime.grid(row=5, column=0, columnspan=4)
+        diffTime.grid(row=6, column=0, columnspan=5)
         diffTime.after(2000, diffTime.destroy)
     else:
         diffTime = Label(window, text="You didn't start any course", fg="red")
@@ -304,7 +305,7 @@ def start_session(combo_box_start, window):
             print("You just started a " + combo_box_start.get() + " session at " + now)
 
             startText = Label(window, text= "You just started a " + combo_box_start.get() + " session at " + now, fg="green")
-            startText.grid(row=5, column=0, columnspan=5)
+            startText.grid(row=6, column=0, columnspan=5)
             startText.after(3000, startText.destroy)
 
     return combo_box_start.get(), now, True
@@ -376,13 +377,20 @@ def endSessionChecked(combo_box_end, window):
         end_session(selected_value)  # Call end_session() if valid
 
 
-def reset_selections(type_var, course_var, label_result):
+def reset_selections(TPorDone, type_var, course_var, label_result):
     """Reset the selections and update the label"""
-    type_var.set(None)  # Reset the type variable
-    course_var.set("None")  # Reset the course variable
+    if TPorDone == "Done":
+        type_var.set(None)  # Reset the type variable
+        course_var.set("None")  # Reset the course variable
+        # Reset the label result to its initial message
+        label_result.config(text="Please select both a Type and a Course.")
 
-    # Reset the label result to its initial message
-    label_result.config(text="Please select both a Type and a Course.")
+    if TPorDone == "TPCM":
+        type_var.set(None)  # Reset the type variable
+        course_var.set("None")  # Reset the course variable
+        # Reset the label result to its initial message
+        label_result.config(text="Please select a TP or a CM.")
+
 
 
 def check_selection(type_var, course_var, label_result):
@@ -397,7 +405,7 @@ def check_selection(type_var, course_var, label_result):
 
 
     label_result.config(text=f"Selected: {selected_course} - {selected_type}", fg="green")
-    label_result.after(1000, lambda: reset_selections(type_var, course_var, label_result))
+    label_result.after(1000, lambda: reset_selections("Done",type_var, course_var, label_result))
 
     doneCourse = "Done" + selected_course
     print(f"Updating: {doneCourse}, type: {selected_type}, week: S{currentweek}")
@@ -485,8 +493,80 @@ def getText(inputText):
         path = "/Users/thibaultvanni/PycharmProjects/Study/hours_done/" + str(course_name) + ".csv"
         myvar.to_csv(path, mode='w', index=True, header=True)
 
-def createNumberofTPandCM():
-    pass
+def on_button_click(course, name):
+    print(f"Button {name} in {course}")
+    print(f"Setting the {name} done")
+
+    file = pd.read_csv("/Users/thibaultvanni/PycharmProjects/Study/TPCMNUMBERS.csv")
+
+    file.loc[(file["Course"] == course) & (file["Session"] == name), "Done"] = "YES"
+    file.to_csv("/Users/thibaultvanni/PycharmProjects/Study/TPCMNUMBERS.csv", mode='w', index=False, header=True)
+
+    print(file[(file["Course"] == course)])
+
+
+def clear_buttons():
+    """Remove all existing buttons from the window."""
+    for btn in button_list:
+        btn.destroy()
+    button_list.clear()
+
+
+def TPCMconfirmation(session_var, course_var, label_result):
+
+    selected_work = session_var.get()
+    selected_course = course_var.get()
+    print(f"Selected course: {selected_course}")
+
+
+
+def showTPandCM(event, window, course):
+    clear_buttons()
+    #session_var = StringVar()#
+    #course_var = StringVar()
+    #session_var.set("None")
+    #course_var.set("None")  # Default value
+
+    file = pd.read_csv("/Users/thibaultvanni/PycharmProjects/Study/TPCMNUMBERS.csv")
+    course = "".join(course.split(" "))
+
+    print(file[(file["Course"] == course)])
+    cm_count = 0
+    tp_count = 0
+    row_index = 0
+    col_index = 0
+    for index, (row_key, row) in enumerate(file[(file["Course"] == course)].iterrows()):
+        #print(f"Row Key: {index}, Row: {row}")  # row[0] contains the value
+        if "CM" in row["Type"] and row["Done"] == "NO":
+            col_index = 1
+            row_index = cm_count  # CM has its own row index
+            cm_count += 1
+        elif "TP" in row["Type"] and row["Done"] == "NO":
+            row_index = tp_count  # TP has its own row index
+            tp_count += 1
+
+        btn = Button(window, text=row['Session'], command=lambda name=row['Session']: on_button_click(course, name), width=10, height=2)
+        btn.grid(row=2+row_index, column=col_index, padx=0, pady=0)  # Use grid layout
+        button_list.append(btn)
+
+    label_result = Label(window, text="Please select a Type and a Course.")
+    label_result.grid(row=2+row_index+1, column=0, columnspan=4, pady=10)
+    #button = Button(window, text="Confirm", command=TPCMconfirmation(session_var, course_var, label_result))
+    #button.grid(row=2+row_index+2, column=0, columnspan=4, padx=5, pady=2)
+    #button_list.append(button)
+
+def TODOWindow(master):
+    TODOWindow = Toplevel(master)
+    TODOWindow.title("TODO in the courses")
+
+    labels = Label(TODOWindow, text="Select the course you just finished a TP or a CM").grid(column=0, row=0, columnspan=2)
+
+    courseValidation = ttk.Combobox(TODOWindow, values=["Mécanique des Milieux Continus", "Thermodynamique", "Fabrication Mécanique", "Télécommunications", "TEST"])
+    courseValidation.grid(column=0, row=1, columnspan=2)
+    courseValidation.bind("<<ComboboxSelected>>",lambda event: showTPandCM(event, TODOWindow, courseValidation.get()))
+
+    TODOWindow.mainloop()
+
 
 def graph_window(master):
     global canvas
@@ -521,12 +601,6 @@ def newCourseWindow(master):
     inputText.grid(column=1, row=3)
 
     Button(newCourseWindow, text="Enter", command=lambda:getText(inputText)).grid(column=2, row=3)
-
-def TODOWindow(master):
-    TODOWindow = Toplevel(master)
-    TODOWindow.title("TODO in the courses")
-
-
 
 
 
