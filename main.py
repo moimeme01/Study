@@ -502,7 +502,7 @@ def on_button_click(course, name):
     file.loc[(file["Course"] == course) & (file["Session"] == name), "Done"] = "YES"
     file.to_csv("/Users/thibaultvanni/PycharmProjects/Study/TPCMNUMBERS.csv", mode='w', index=False, header=True)
 
-    print(file[(file["Course"] == course)])
+    #print(file[(file["Course"] == course)])
 
 
 def clear_buttons():
@@ -516,7 +516,7 @@ def TPCMconfirmation(session_var, course_var, label_result):
 
     selected_work = session_var.get()
     selected_course = course_var.get()
-    print(f"Selected course: {selected_course}")
+    #print(f"Selected course: {selected_course}")
 
 
 
@@ -530,13 +530,13 @@ def showTPandCM(event, window, course):
     file = pd.read_csv("/Users/thibaultvanni/PycharmProjects/Study/TPCMNUMBERS.csv")
     course = "".join(course.split(" "))
 
-    print(file[(file["Course"] == course)])
+    week_number = which_week()
     cm_count = 0
     tp_count = 0
     row_index = 0
     col_index = 0
     for index, (row_key, row) in enumerate(file[(file["Course"] == course)].iterrows()):
-        #print(f"Row Key: {index}, Row: {row}")  # row[0] contains the value
+        print(f"Row Key: {index}")  # row[0] contains the value
         if "CM" in row["Type"] and row["Done"] == "NO":
             col_index = 1
             row_index = cm_count  # CM has its own row index
@@ -545,12 +545,16 @@ def showTPandCM(event, window, course):
             row_index = tp_count  # TP has its own row index
             tp_count += 1
 
-        btn = Button(window, text=row['Session'], command=lambda name=row['Session']: on_button_click(course, name), width=10, height=2)
-        btn.grid(row=2+row_index, column=col_index, padx=0, pady=0)  # Use grid layout
-        button_list.append(btn)
+        if row_index > 0:
+            btn = Button(window, text=row['Session'], command=lambda name=row['Session']: on_button_click(course, name), width=10, height=2)
+            btn.grid(row=2+row_index, column=col_index, padx=0, pady=0)  # Use grid layout
+            button_list.append(btn)
+    if tp_count == 0 and cm_count == 0:
+        Label(window, text="You're up to date.", fg="green").grid(row=row_index+2, column=0, columnspan = 4, padx=0, pady=0)
 
+    biggest_index = tp_count if tp_count > cm_count else cm_count
     label_result = Label(window, text="Please select a Type and a Course.")
-    label_result.grid(row=2+row_index+1, column=0, columnspan=4, pady=10)
+    label_result.grid(row=2+biggest_index+1, column=0, columnspan=4, pady=10)
     #button = Button(window, text="Confirm", command=TPCMconfirmation(session_var, course_var, label_result))
     #button.grid(row=2+row_index+2, column=0, columnspan=4, padx=5, pady=2)
     #button_list.append(button)
