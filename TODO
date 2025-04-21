@@ -13,6 +13,7 @@ Faire les graphes:
     -> Ajouter des stats globales: moyenne journalières (bar plot avec diff couleurs sur la meme barre pour les différents cours)
     -> A faire et fait globalement (Deux barplots avec différentes couleurs par cours. A voir comment l'organiser)
     -> Ajouter la moyenne dans les heures par session
+    -> Ajouter le max dans le graphe TOTALSTUDY
 
 FERMER LE TERMINAL SI LE PROGRAMME EST FERMÉ
 
