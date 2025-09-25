@@ -1,6 +1,81 @@
-Course_list = ["Thermodynamique", "FabricationMécanique", "Télécommunications", "MécaniquedesMilieuxContinus", "TEST"]
+Course_list_Q2_2024_2025 = ["Thermodynamique", "FabricationMécanique", "Télécommunications", "MécaniquedesMilieuxContinus", "TEST"]
+Course_list_Q1_2025_2026 = ["Algorithmique", "SoftwareEngineerProject", "PhysiqueDesDispositifs", "Bioinformatics", "SystèmesInformatiques"]
 
 session_running = False
+
+Algorithmique = {"S1": ["TP", "CM"],
+                   "S2": ["TP", "CM"],
+                   "S3": ["TP", "CM"],
+                   "S4": ["TP", "CM"],
+                   "S5": ["TP", "CM"],
+                   "S6": ["TP", "CM"],
+                   "S7": ["TP", "CM"],
+                   "S8": ["TP", "CM"],
+                   "S9": ["TP", "CM"],
+                   "S10": ["TP", "CM"],
+                   "S11": ["TP", "CM"],
+                   "S12": ["TP", "CM"],
+                   "S13": ["TP", "CM"],
+                  "S14": ["TP"]}
+
+SoftwareEngineerProject = {"S1": ["CM"],
+                   "S2": ["CM"],
+                   "S3": ["CM", "CM"],
+                   "S4": ["CM"],
+                   "S5": ["CM"],
+                   "S6": ["CM"],
+                   "S7": [],
+                   "S8": ["CM"],
+                   "S9": ["CM"],
+                   "S10": ["CM"],
+                   "S11": ["CM"],
+                   "S12": ["CM"],
+                   "S13": ["CM"],
+                  "S14": ["CM"]}
+
+PhysiqueDesDispositifs = {"S1": ["CM"],
+                   "S2": ["TP", "CM"],
+                   "S3": ["TP", "CM"],
+                   "S4": ["TP", "CM"],
+                   "S5": ["TP", "CM"],
+                   "S6": ["TP", "CM"],
+                   "S7": [],
+                   "S8": ["TP", "CM"],
+                   "S9": ["TP", "CM"],
+                   "S10": ["TP", "CM"],
+                   "S11": ["TP", "CM"],
+                   "S12": ["TP", "CM"],
+                   "S13": ["TP", "CM"],
+                  "S14": ["CM"]}
+SystèmesInformatiques = {"S1": ["TP", "CM"],
+                   "S2": ["TP", "CM"],
+                   "S3": ["TP", "CM"],
+                   "S4": ["TP", "CM"],
+                   "S5": ["TP", "CM"],
+                   "S6": ["TP", "CM"],
+                   "S7": ["TP", "CM"],
+                   "S8": ["TP", "CM"],
+                   "S9": ["TP", "CM"],
+                   "S10": ["TP", "CM"],
+                   "S11": ["TP", "CM"],
+                   "S12": ["TP", "CM"],
+                   "S13": ["TP", "CM"],
+                  "S14": ["TP", "CM"]}
+
+Bioinformatics = {"S1": ["CM"],
+                   "S2": ["CM"],
+                   "S3": ["CM"],
+                   "S4": ["TP", "CM"],
+                   "S5": ["CM"],
+                   "S6": ["CM"],
+                   "S7": ["CM"],
+                   "S8": ["CM"],
+                   "S9": ["TP", "CM"],
+                   "S10": ["CM"],
+                   "S11": ["CM"],
+                   "S12": ["CM"],
+                   "S13": ["TP", "CM"],
+                  "S14": ["CM"]}
 
 Thermodynamique = {"S1": ["CM"],
                    "S2": ["TP", "CM"],

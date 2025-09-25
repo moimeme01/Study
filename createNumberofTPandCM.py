@@ -1,13 +1,14 @@
 import pandas as pd
 import os
 import course_calendar
-from course_calendar import Course_list
-
-
+from create_total_file import *
+from main import initial_path, actual_period
 
 mydataset = []
+actual_list_name = "Course_list_" + actual_period
 
-for courses in Course_list:
+for courses in getattr(course_calendar, actual_list_name):
+    print(courses)
     TPNumber = 0
     CMNumber = 0
     for key in getattr(course_calendar, courses).keys():
@@ -19,7 +20,6 @@ for courses in Course_list:
         mydataset.append([courses, "CM", f"CM{i}", "NO"])
 
 mydataset = pd.DataFrame(mydataset, columns=["Course", "Type", "Session", "Done"])
-mydataset.to_csv('/Users/thibaultvanni/PycharmProjects/Study/TPCMNUMBERS.csv', mode='w', index=False)
-test = pd.read_csv("/Users/thibaultvanni/PycharmProjects/Study/TPCMNUMBERS.csv")
+mydataset.to_csv(initial_path + "TPCMNUMBERS.csv", mode='w', index=False)
 
 
