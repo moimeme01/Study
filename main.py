@@ -18,41 +18,20 @@ from tkinter import ttk, messagebox
 from pandas import read_csv
 
 import course_calendar
+from create_total_file import create_total_file_function
+
+from settings import *
+
 
 # Global variable to store the canvas
 canvas = None
 toolbar = None
 button_list = []
-actual_period = "Q1_2025_2026"
 
-initial_path = '/Users/thibaultvanni/PycharmProjects/Study/' + actual_period
-session_running_path = initial_path + "/session_running"
-hours_done_path = initial_path + '/hours_done_' + actual_period
-
-
-weeks = {
-          "S1": ["15/09", "16/09", "17/09", "18/09", "19/09"],
-          "S2": ["22/09", "23/09", "24/09", "25/09", "26/09"],
-          "S3": ["29/09", "30/09", "01/10", "02/10", "03/10"],
-          "S4": ["06/10", "07/10", "08/10", "09/10", "10/10"],
-          "S5": ["13/10", "14/10", "15/10", "16/10", "17/10"],
-          "S6": ["20/10", "21/10", "22/10", "23/10", "24/10"],
-          "S7": ["27/10", "28/10", "29/10", "30/10", "31/10"],
-          "S8": ["03/11", "04/11", "05/11", "06/11", "07/11"],
-          "S9": ["10/11", "11/11", "12/11", "13/11", "14/11"],
-          "S10": ["17/11", "18/11", "19/11", "20/11", "21/11"],
-          "S11": ["24/11", "25/11", "26/11", "27/11", "28/11"],
-          "S12": ["01/12", "02/12", "03/12", "04/12", "05/12"],
-          "S13": ["08/12", "09/12", "10/12", "11/12", "12/12"],
-          "S14": ["15/12", "16/12", "17/12", "18/12", "19/12"],
-          "Blocus1": ["22/12", "23/12", "24/12", "25/12", "26/12"],
-          "Blocus2": ["29/12", "30/12", "31/12", "01/01", "02/01"],
-          "Examen1": ["05/01", "06/01", "07/01", "08/01", "09/01"],
-          "Examen2": ["12/01", "13/01", "14/01", "15/01", "16/01"]}
 
 
 def which_week():
-    # return the actual week based on the actual date.
+    # return the actual week based on the settings.py.
 
     today = datetime.today().strftime('%d/%m')
     for week_number in weeks.keys():
@@ -257,7 +236,7 @@ def total_study_time(window):
         toolbar = None
 
     fig, ax = plt.subplots()
-    subprocess.run(['python3', '/Users/thibaultvanni/PycharmProjects/Study/create_total_file.py'])
+    func = create_total_file_function()
 
     # Load the dataset
     file = hours_done_path + "/" + "TOTALSTUDY.csv"

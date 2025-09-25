@@ -2,7 +2,7 @@ import pandas as pd
 import os
 import course_calendar
 from create_total_file import *
-from main import initial_path, actual_period
+from settings import *
 
 
 mydataset = []
