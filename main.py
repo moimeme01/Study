@@ -26,10 +26,11 @@ button_list = []
 actual_period = "Q1_2025_2026"
 
 initial_path = '/Users/thibaultvanni/PycharmProjects/Study/' + actual_period
+session_running_path = initial_path + "/session_running"
+hours_done_path = initial_path + '/hours_done_' + actual_period
 
-"""
-def which_week():
-    weeks = {
+
+weeks = {
           "S1": ["15/09", "16/09", "17/09", "18/09", "19/09"],
           "S2": ["22/09", "23/09", "24/09", "25/09", "26/09"],
           "S3": ["29/09", "30/09", "01/10", "02/10", "03/10"],
@@ -44,18 +45,23 @@ def which_week():
           "S12": ["01/12", "02/12", "03/12", "04/12", "05/12"],
           "S13": ["08/12", "09/12", "10/12", "11/12", "12/12"],
           "S14": ["15/12", "16/12", "17/12", "18/12", "19/12"],
-          "S15": ["22/12", "23/12", "24/12", "25/12", "26/12"],
-          "S16": ["29/12", "30/12", "31/12", "01/01", "02/01"],
-          "S17": ["05/01", "06/01", "07/01", "08/01", "09/01"],
-          "S18": ["12/01", "13/01", "14/01", "15/01", "16/01"]
-        }
+          "Blocus1": ["22/12", "23/12", "24/12", "25/12", "26/12"],
+          "Blocus2": ["29/12", "30/12", "31/12", "01/01", "02/01"],
+          "Examen1": ["05/01", "06/01", "07/01", "08/01", "09/01"],
+          "Examen2": ["12/01", "13/01", "14/01", "15/01", "16/01"]}
+
+
+def which_week():
+    # return the actual week based on the actual date.
 
     today = datetime.today().strftime('%d/%m')
     for week_number in weeks.keys():
         if today in weeks[week_number]:
             print("We are in the week number: ", week_number)
-            int_week_number = int(week_number.split("S")[1])
-            return int_week_number
+            if week_number[0] == "S":
+                int_week_number = int(week_number.split("S")[1])
+                return int_week_number
+            return 0
 
 
 def graph_work_quantity(course, actual_week_number, TPorCM, window):
@@ -77,9 +83,9 @@ def graph_work_quantity(course, actual_week_number, TPorCM, window):
     numberofTPTheorical = 0
     numberofCMTheorical = 0
     courseNEW = "".join(course.split(" "))
-    file = "/Users/thibaultvanni/PycharmProjects/Study/hours_done/Done" + courseNEW + ".csv"
+    file = initial_path + "/hours_done_" + actual_period + "/Done" + courseNEW + ".csv"
     df = pd.read_csv(file)
-    print(TPorCM)
+
 
     for week_number in getattr(course_calendar, courseNEW).keys():
         week_number_temporary = int(week_number.split("S")[1])
@@ -158,7 +164,7 @@ def graph_work_quantity(course, actual_week_number, TPorCM, window):
 
 def time_from_beginning(window):
     now = datetime.now()
-    with open("/Users/thibaultvanni/PycharmProjects/Study/session_running", "r") as file:
+    with open(session_running_path, "r") as file:
         lines = []
         for line in file:
             lines.append(line)
@@ -194,7 +200,7 @@ def graph_Practical(course, window):
         toolbar = None
 
 
-    file = "/Users/thibaultvanni/PycharmProjects/Study/hours_done/" + "".join(course.split(" ")) + ".csv"
+    file = initial_path + "/hours_done_" + actual_period + "/" + "".join(course.split(" ")) + ".csv"
     df = pd.read_csv(file)
     print(df)
     fig = Figure(figsize=(6, 6), dpi=100)
@@ -254,7 +260,7 @@ def total_study_time(window):
     subprocess.run(['python3', '/Users/thibaultvanni/PycharmProjects/Study/create_total_file.py'])
 
     # Load the dataset
-    file = "/Users/thibaultvanni/PycharmProjects/Study/hours_done/TOTALSTUDY.csv"
+    file = hours_done_path + "/" + "TOTALSTUDY.csv"
     df = pd.read_csv(file)
 
     df['Delta'] = pd.to_timedelta(df['Delta']).dt.total_seconds() / 3600  # Convert to hours
@@ -296,7 +302,7 @@ def start_session(combo_box_start, window):
     print(f"Selected: {selected_value}")
 
 
-    with open("/Users/thibaultvanni/PycharmProjects/Study/session_running", "r+") as file:
+    with open(session_running_path, "r+") as file:
         content = file.read()  # Read the entire file
         print(content)  # Debugging step to check file contents
 
@@ -322,7 +328,7 @@ def start_session(combo_box_start, window):
 
 def end_session(combo_box_end):
     now = datetime.now()
-    with open("/Users/thibaultvanni/PycharmProjects/Study/session_running", "r+") as file:
+    with open(session_running_path, "r+") as file:
         lines = []
         for line in file:
             lines.append(line)
@@ -336,7 +342,7 @@ def end_session(combo_box_end):
     df = pd.DataFrame({'Start': [start_time.strftime('%d/%m/%y %H:%M:%S')],
                        'End': [now.strftime('%d/%m/%y %H:%M:%S')],
                        'Delta': [delta_time],})
-    file_to_add = '/Users/thibaultvanni/PycharmProjects/Study/hours_done/' + "".join(combo_box_end.split(" ")) + ".csv"
+    file_to_add = hours_done_path +'/' + "".join(combo_box_end.split(" ")) + ".csv"
     df.to_csv(file_to_add, mode='a', index=True, header=False)
     messagebox.showinfo("Great job", "You have been working on : \n" + lines[1] + " for \n" + str(delta_time))
     print("Course's duration is: ", delta_time)
@@ -358,7 +364,7 @@ def checkIfInFile(file, end):
 
 def check(moment, value, window):
     print("Check runnning")
-    with open("/Users/thibaultvanni/PycharmProjects/Study/session_running", "r+") as file:
+    with open(session_running_path, "r+") as file:
         lines = []
         for line in file:
             lines.append(line)
@@ -419,7 +425,7 @@ def check_selection(type_var, course_var, label_result):
     doneCourse = "Done" + selected_course
     print(f"Updating: {doneCourse}, type: {selected_type}, week: S{currentweek}")
 
-    file = "/Users/thibaultvanni/PycharmProjects/Study/hours_done/" + "".join(doneCourse.split(" ")) + ".csv"
+    file = hours_done_path + "".join(doneCourse.split(" ")) + ".csv"
     df = pd.read_csv(file, index_col=0)
     df.at["S"+str(currentweek), selected_type] += 1
     print(df)
@@ -446,14 +452,14 @@ def goodJobWindow(master):
     label_result = Label(goodJobWindow, text="Please select both a Type and a Course.")
     label_result.grid(row=9, column=0, columnspan=4, pady=10)
 
-    Radiobutton(goodJobWindow, text="Thermodynamique", variable=course_var, value="Thermodynamique").grid(row=3, column=3, sticky="w", padx=5, pady=2)
-    Radiobutton(goodJobWindow, text="Mécanique des Milieux Continus", variable=course_var, value="Mécanique des Milieux Continus").grid(row=4, column=3, sticky="w", padx=5, pady=2)
-    Radiobutton(goodJobWindow, text="Fabrication Mécanique", variable=course_var, value="Fabrication Mécanique").grid(row=5, column=3, sticky="w", padx=5, pady=2)
-    Radiobutton(goodJobWindow, text="Télécommunications", variable=course_var, value="Télécommunications").grid(row=6, column=3,  sticky="w", padx=5, pady=2)
-    Radiobutton(goodJobWindow, text="TEST", variable=course_var, value="TEST").grid(row=7, column=3, sticky="w", padx=5, pady=2)
+    column = 3
+    row = 3
+    for courses in getattr(course_calendar, "Course_list_" + actual_period):
+        Radiobutton(goodJobWindow, text=courses, variable=course_var, value=courses).grid(row=row, column=column, sticky="w", padx=5, pady=2)
+        row += 1
 
     confirmButton = Button(goodJobWindow, text="Confirm", command=lambda: check_selection(type_var, course_var, label_result))
-    confirmButton.grid(row=8, column=0, columnspan=4, padx=5, pady=2)
+    confirmButton.grid(row= row, column=0, columnspan=4, padx=5, pady=2)
 
     # Update course and type when either is selected
     for widget in goodJobWindow.winfo_children():
@@ -467,7 +473,7 @@ def goodJobWindow(master):
 def confirm():
     confirmed = messagebox.askquestion("Reset the data", "Are you sure to reset the data? \nThis action cannot be undone.", icon='warning')
     if confirmed == "yes":
-        shutil.rmtree("/Users/thibaultvanni/PycharmProjects/Study/hours_done")
+        shutil.rmtree(hours_done_path)
     else:
         messagebox.showinfo('Return', 'Returning to main application')
 
@@ -483,16 +489,16 @@ def update_graph2(event, window, TPorCM, workDonecombobox):
     graph_work_quantity(workDonecourse, which_week(), TPorCM, window)
 
 def choosedTPorCM(window, TPorCM):
-    workDonecombobox = ttk.Combobox(window, values=["Mécanique des Milieux Continus", "Thermodynamique", "Fabrication Mécanique", "Télécommunications", "TEST"])
+    workDonecombobox = ttk.Combobox(window, values=getattr(course_calendar, "Course_list_" + actual_period))
     workDonecombobox.grid(row=4, column=2, sticky="w")
     workDonecombobox.bind("<<ComboboxSelected>>", lambda event: update_graph2(event, window, TPorCM, workDonecombobox))
 
 
-def getText(inputText):
+def getText(inputText): #### Need to maybe edit this function
     course_name = inputText.get()
     print(f'{course_name=!r}')
     course_name_file = course_name + ".csv"
-    if course_name_file in os.listdir("/Users/thibaultvanni/PycharmProjects/Study/hours_done"):
+    if course_name_file in os.listdir(hours_done_path):
         messagebox.showwarning("ATTENTION", "Course " + str(course_name) + " already exists.\n Please choose a different course.")
     else:
         mydataset = {'Start': [],
@@ -500,18 +506,17 @@ def getText(inputText):
                      'Delta': []}
         myvar = pd.DataFrame(mydataset)
         path = "/Users/thibaultvanni/PycharmProjects/Study/hours_done/" + str(course_name) + ".csv"
-        myvar.to_csv(path, mode='w', index=True, header=True)
+        myvar.to_csv(path, mode='w', index=True, header=True) ###
 
 def on_button_click(course, name):
     print(f"Button {name} in {course}")
     print(f"Setting the {name} done")
 
-    file = pd.read_csv("/Users/thibaultvanni/PycharmProjects/Study/TPCMNUMBERS.csv")
+    file = pd.read_csv(initial_path + "/TPCMNUMBERS.csv")
 
     file.loc[(file["Course"] == course) & (file["Session"] == name), "Done"] = "YES"
-    file.to_csv("/Users/thibaultvanni/PycharmProjects/Study/TPCMNUMBERS.csv", mode='w', index=False, header=True)
+    file.to_csv(initial_path + "/TPCMNUMBERS.csv", mode='w', index=False, header=True)
 
-    #print(file[(file["Course"] == course)])
 
 
 def clear_buttons():
@@ -525,7 +530,7 @@ def TPCMconfirmation(session_var, course_var, label_result):
 
     selected_work = session_var.get()
     selected_course = course_var.get()
-    #print(f"Selected course: {selected_course}")
+    print(f"Selected course: {selected_course}")
 
 
 
@@ -536,7 +541,7 @@ def showTPandCM(event, window, course):
     #session_var.set("None")
     #course_var.set("None")  # Default value
 
-    file = pd.read_csv("/Users/thibaultvanni/PycharmProjects/Study/TPCMNUMBERS.csv")
+    file = pd.read_csv(initial_path + "/TPCMNUMBERS.csv")
     course = "".join(course.split(" "))
 
     week_number = which_week()
@@ -574,7 +579,7 @@ def TODOWindow(master):
 
     labels = Label(TODOWindow, text="Select the course you just finished a TP or a CM").grid(column=0, row=0, columnspan=2)
 
-    courseValidation = ttk.Combobox(TODOWindow, values=["Mécanique des Milieux Continus", "Thermodynamique", "Fabrication Mécanique", "Télécommunications", "TEST"])
+    courseValidation = ttk.Combobox(TODOWindow, values=getattr(course_calendar, "Course_list_" + actual_period))
     courseValidation.grid(column=0, row=1, columnspan=2)
     courseValidation.bind("<<ComboboxSelected>>",lambda event: showTPandCM(event, TODOWindow, courseValidation.get()))
 
@@ -591,7 +596,7 @@ def graph_window(master):
     back_button.grid(row=0, column=0, columnspan=4, sticky="w")
 
     Label(graphWindow, text="Do you want to see the work hours? ").grid(row=2, column=0, columnspan=2, sticky="w")
-    course_combobox = ttk.Combobox(graphWindow, values=["Mécanique des Milieux Continus", "Thermodynamique", "Fabrication Mécanique", "Télécommunications", "TEST"])
+    course_combobox = ttk.Combobox(graphWindow, values=getattr(course_calendar, "Course_list_" + actual_period))
     course_combobox.grid(row=3, column=0, sticky="w")
     course_combobox.bind("<<ComboboxSelected>>", lambda event: update_graph1(event, graphWindow, course_combobox))
 
@@ -633,13 +638,13 @@ def main():
 
     Label(home_window, text='Do you want to start a session?').grid(row=2, column=0, columnspan=2, sticky="w")
 
-    combo_box_start = ttk.Combobox(home_window, values=["Mécanique des Milieux Continus", "Thermodynamique", "Fabrication Mécanique", "Télécommunications", "TEST"])
+    combo_box_start = ttk.Combobox(home_window, values=getattr(course_calendar, "Course_list_" + actual_period))
     combo_box_start.grid(row=3, column=0, sticky="w")
     combo_box_start.bind("<<ComboboxSelected>>", lambda event: start_session(combo_box_start, home_window))
 
     endText = Label(home_window, text='Do you want to end a session?')
     endText.grid(row=2, column=2, columnspan=2, sticky="w")
-    combo_box_end = ttk.Combobox(home_window, values=["Mécanique des Milieux Continus", "Thermodynamique", "Fabrication Mécanique", "Télécommunications", "TEST"])
+    combo_box_end = ttk.Combobox(home_window, values=getattr(course_calendar, "Course_list_" + actual_period))
     combo_box_end.grid(row=3, column=2, sticky="w")
     combo_box_end.bind("<<ComboboxSelected>>", lambda event: endSessionChecked(combo_box_end, home_window))
 
@@ -670,7 +675,7 @@ def main():
 
 main()
 
-"""
+
 
 
 

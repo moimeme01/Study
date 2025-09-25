@@ -1,5 +1,5 @@
 Course_list_Q2_2024_2025 = ["Thermodynamique", "FabricationMécanique", "Télécommunications", "MécaniquedesMilieuxContinus", "TEST"]
-Course_list_Q1_2025_2026 = ["Algorithmique", "SoftwareEngineerProject", "PhysiqueDesDispositifs", "Bioinformatics", "SystèmesInformatiques"]
+Course_list_Q1_2025_2026 = ["Algorithmique", "Software Engineer Project", "Physique Des Dispositifs", "Bioinformatics", "Systèmes Informatiques"]
 
 session_running = False
 
