@@ -16,7 +16,13 @@ Algorithmique = {"S1": ["TP", "CM"],
                    "S11": ["TP", "CM"],
                    "S12": ["TP", "CM"],
                    "S13": ["TP", "CM"],
-                  "S14": ["TP"]}
+                   "S14": ["TP"],
+                   "S15": [],
+                   "Blocus1": [],
+                   "Blocus2": [],
+                   "Examen1": [],
+                   "Examen2": [],
+                   "Examen3": []}
 
 SoftwareEngineerProject = {"S1": ["CM"],
                    "S2": ["CM"],
@@ -31,7 +37,12 @@ SoftwareEngineerProject = {"S1": ["CM"],
                    "S11": ["CM"],
                    "S12": ["CM"],
                    "S13": ["CM"],
-                  "S14": ["CM"]}
+                   "S14": ["CM"],
+                   "Blocus1": [],
+                   "Blocus2": [],
+                   "Examen1": [],
+                   "Examen2": [],
+                   "Examen3": []}
 
 PhysiqueDesDispositifs = {"S1": ["CM"],
                    "S2": ["TP", "CM"],
@@ -46,7 +57,13 @@ PhysiqueDesDispositifs = {"S1": ["CM"],
                    "S11": ["TP", "CM"],
                    "S12": ["TP", "CM"],
                    "S13": ["TP", "CM"],
-                  "S14": ["CM"]}
+                   "S14": ["CM"],
+                   "Blocus1": [],
+                   "Blocus2": [],
+                   "Examen1": [],
+                   "Examen2": [],
+                   "Examen3": []}
+
 SystèmesInformatiques = {"S1": ["TP", "CM"],
                    "S2": ["TP", "CM"],
                    "S3": ["TP", "CM"],
@@ -60,7 +77,12 @@ SystèmesInformatiques = {"S1": ["TP", "CM"],
                    "S11": ["TP", "CM"],
                    "S12": ["TP", "CM"],
                    "S13": ["TP", "CM"],
-                  "S14": ["TP", "CM"]}
+                   "S14": ["TP", "CM"],
+                   "Blocus1": [],
+                   "Blocus2": [],
+                   "Examen1": [],
+                   "Examen2": [],
+                   "Examen3": []}
 
 Bioinformatics = {"S1": ["CM"],
                    "S2": ["CM"],
@@ -75,7 +97,13 @@ Bioinformatics = {"S1": ["CM"],
                    "S11": ["CM"],
                    "S12": ["CM"],
                    "S13": ["TP", "CM"],
-                  "S14": ["CM"]}
+                   "S14": ["CM"],
+                   "Blocus1": [],
+                   "Blocus2": [],
+                   "Examen1": [],
+                   "Examen2": [],
+                   "Examen3": []}
+
 
 Thermodynamique = {"S1": ["CM"],
                    "S2": ["TP", "CM"],

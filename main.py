@@ -37,10 +37,8 @@ def which_week():
     for week_number in weeks.keys():
         if today in weeks[week_number]:
             print("We are in the week number: ", week_number)
-            if week_number[0] == "S":
-                int_week_number = int(week_number.split("S")[1])
-                return int_week_number
-            return 0
+
+            return week_number
 
 
 def int_week(week):
@@ -78,12 +76,7 @@ def graph_work_quantity(course, actual_week_number, TPorCM, window):
     numberofTPTheorical = 0
     numberofCMTheorical = 0
 
-    bar_done = []
-    bar_to_do = []
-    x = arange(len(passed_week))  # the label locations
-    width = 0.35  # the width of the bars
-
-
+    int_actual_week_number = int_week(actual_week_number)
     courseNEW = "".join(course.split(" "))
     file = initial_path + "/hours_done_" + actual_period + "/Done" + courseNEW + ".csv"
     df = pd.read_csv(file)
@@ -91,7 +84,7 @@ def graph_work_quantity(course, actual_week_number, TPorCM, window):
 
     for week_number in weeks.keys():
         week_number_temporary = int_week(week_number)
-        if TPorCM == "TP" and week_number_temporary <= actual_week_number: # making all the sublists that allows to make the bar plot of the TP done during the past weeks
+        if TPorCM == "TP" and week_number_temporary <= int_actual_week_number: # making all the sublists that allows to make the bar plot of the TP done during the past weeks
             DoneTP.append(sum(df["TP"][:week_number_temporary]))
             if TPorCM in getattr(course_calendar, courseNEW)[week_number]:
                 numberofTPTheorical += getattr(course_calendar, courseNEW)[week_number].count("TP")
@@ -100,7 +93,7 @@ def graph_work_quantity(course, actual_week_number, TPorCM, window):
             else:
                 theoricalTP.append(0)
                 passed_week.append(week_number)
-        if TPorCM == "CM/Théorie" and week_number_temporary <= actual_week_number :
+        if TPorCM == "CM/Théorie" and week_number_temporary <= int_actual_week_number :
             DoneCM.append(sum(df["CM"][:week_number_temporary]))
             if "CM" in getattr(course_calendar, courseNEW)[week_number]:
                 numberofCMTheorical += getattr(course_calendar, courseNEW)[week_number].count("CM")
@@ -110,12 +103,13 @@ def graph_work_quantity(course, actual_week_number, TPorCM, window):
                 theoricalCM.append(0)
                 passed_week.append(week_number)
 
-            bar_done = [x - width / 2, DoneCM, width, 'CM or Theory done']
-            bar_to_do = [x + width / 2, theoricalCM, width, 'CM to do']
-            title = 'Progress of CM in ' + course
-
-        elif week_number_temporary > actual_week_number:
+        elif week_number_temporary > int_actual_week_number:
             break
+
+    bar_done = []
+    bar_to_do = []
+    x = arange(len(passed_week))  # the label locations
+    width = 0.35  # the width of the bars
 
 
     if TPorCM == "CM/Théorie":
@@ -156,6 +150,8 @@ def graph_work_quantity(course, actual_week_number, TPorCM, window):
 
 
 def time_from_beginning(window):
+    # Gives the time since the beginning of the session
+
     now = datetime.now()
     with open(session_running_path, "r") as file:
         lines = []
@@ -170,7 +166,7 @@ def time_from_beginning(window):
         diffTime.after(2000, diffTime.destroy)
     else:
         diffTime = Label(window, text="You didn't start any course", fg="red")
-        diffTime.grid(row=5, column=0, columnspan=4)
+        diffTime.grid(row=6, column=0, columnspan=4)
         diffTime.after(2000, diffTime.destroy)
 
 
@@ -304,7 +300,6 @@ def start_session(combo_box_start, window):
             messagebox.showerror("Attention", "You have already started a session running.")
 
         else:
-            print(True)
             file.seek(0)  # Move to the beginning
             file.truncate()  # Remove all content
             file.write(now + "\n")
@@ -361,20 +356,14 @@ def check(moment, value, window):
         lines = []
         for line in file:
             lines.append(line)
-    print("lines: ", lines)
-    print("Value end session = ", value)
-    print(len(lines))
     if moment == "End":
         if len(lines) < 3 or "session_running = False\n" in lines:
-            print(True)
             messagebox.showwarning("ATTENTION", "You didn't start any session.")
             return False
         if lines[1].strip() != value:
             print('You cannot close a session in a different course than: '+ lines[1])
             messagebox.showwarning("ATTENTION", 'You cannot close a session in a different course than: '+ lines[1])
             return False
-    if moment == "Start":
-        pass
     return True
 
 def endSessionChecked(combo_box_end, window):
@@ -416,11 +405,11 @@ def check_selection(type_var, course_var, label_result):
     label_result.after(1000, lambda: reset_selections("Done",type_var, course_var, label_result))
 
     doneCourse = "Done" + selected_course
-    print(f"Updating: {doneCourse}, type: {selected_type}, week: S{currentweek}")
+    print(f"Updating: {doneCourse}, type: {selected_type}, week: {currentweek}")
 
     file = hours_done_path + "".join(doneCourse.split(" ")) + ".csv"
     df = pd.read_csv(file, index_col=0)
-    df.at["S"+str(currentweek), selected_type] += 1
+    df.at[currentweek, selected_type] += 1
     print(df)
     df.to_csv(file, mode='w', index=True, header=True)
 
@@ -537,7 +526,7 @@ def showTPandCM(event, window, course):
     file = pd.read_csv(initial_path + "/TPCMNUMBERS.csv")
     course = "".join(course.split(" "))
 
-    week_number = which_week()
+
     cm_count = 0
     tp_count = 0
     row_index = 0
@@ -622,12 +611,12 @@ def main():
     
     #The actual dimensions of the window are: 
     #columns = 5
-    #lines = 4
+    #lines = 5
     
 
     Label(home_window, text='Welcome to this app. Here you can set your work sessions.').grid(row=0, column=0, columnspan = 5)
 
-    Label(home_window, text=f'We actually are in S{which_week()}').grid(row=1, column=0, columnspan = 5)
+    Label(home_window, text=f'We actually are in {which_week()}').grid(row=1, column=0, columnspan = 5)
 
     Label(home_window, text='Do you want to start a session?').grid(row=2, column=0, columnspan=2, sticky="w")
 
