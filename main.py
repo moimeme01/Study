@@ -43,7 +43,23 @@ def which_week():
             return 0
 
 
+def int_week(week):
+    # Return the number of the week. If S in the week number we return the number,
+    # else if blocus or exam week, we return the index of the week in the calendar.
+
+    if week[0] == "S":
+        int_week_number = int(week.split("S")[1])
+        return int_week_number
+
+    int_week_number = int(list(weeks.keys()).index(week))
+    return int_week_number
+
+
+
+
 def graph_work_quantity(course, actual_week_number, TPorCM, window):
+    # THis function is used to make a graph of all the work (TP or CM) done
+    # for one course.
     global canvas
     global toolbar
 
@@ -61,14 +77,21 @@ def graph_work_quantity(course, actual_week_number, TPorCM, window):
     passed_week = []
     numberofTPTheorical = 0
     numberofCMTheorical = 0
+
+    bar_done = []
+    bar_to_do = []
+    x = arange(len(passed_week))  # the label locations
+    width = 0.35  # the width of the bars
+
+
     courseNEW = "".join(course.split(" "))
     file = initial_path + "/hours_done_" + actual_period + "/Done" + courseNEW + ".csv"
     df = pd.read_csv(file)
 
 
-    for week_number in getattr(course_calendar, courseNEW).keys():
-        week_number_temporary = int(week_number.split("S")[1])
-        if TPorCM == "TP" and week_number_temporary <= actual_week_number:
+    for week_number in weeks.keys():
+        week_number_temporary = int_week(week_number)
+        if TPorCM == "TP" and week_number_temporary <= actual_week_number: # making all the sublists that allows to make the bar plot of the TP done during the past weeks
             DoneTP.append(sum(df["TP"][:week_number_temporary]))
             if TPorCM in getattr(course_calendar, courseNEW)[week_number]:
                 numberofTPTheorical += getattr(course_calendar, courseNEW)[week_number].count("TP")
@@ -86,60 +109,51 @@ def graph_work_quantity(course, actual_week_number, TPorCM, window):
             else:
                 theoricalCM.append(0)
                 passed_week.append(week_number)
+
+            bar_done = [x - width / 2, DoneCM, width, 'CM or Theory done']
+            bar_to_do = [x + width / 2, theoricalCM, width, 'CM to do']
+            title = 'Progress of CM in ' + course
+
         elif week_number_temporary > actual_week_number:
             break
 
-    x = arange(len(passed_week))  # the label locations
-    width = 0.35  # the width of the bars
+
     if TPorCM == "CM/Théorie":
-        fig, ax = plt.subplots()
-        fig.subplots_adjust(hspace=0.6)
-        ax.bar(x - width / 2, DoneCM, width, label='CM or Theory done')
-        ax.bar(x + width / 2, theoricalCM, width, label='CM to do')
-
-        ax.set_ylabel('#')
-        ax.set_title('Progress of CM in ' + course)
-        ax.set_xticks(x)
-        ax.set_xticklabels(passed_week)
-        ax.yaxis.set_major_locator(MaxNLocator(integer=True))
-
-        ax.legend()
-
-        fig.tight_layout()
-
-        canvas = FigureCanvasTkAgg(fig, master=window)
-        canvas.draw()
-
-        # Create the toolbar
-        toolbar = NavigationToolbar2Tk(canvas, window, pack_toolbar=False)
-        toolbar.update()
-        # Use grid to place the toolbar and canvas
-        toolbar.grid(row=25, column=2, pady=10)
-        canvas.get_tk_widget().grid(row=5, rowspan=20, column=2, padx=10, pady=10)
+        bar_done = [x - width / 2, DoneCM, width, 'CM or Theory done']
+        bar_to_do = [x + width / 2, theoricalCM, width, 'CM to do']
+        title = 'Progress of CM in ' + course
 
     elif TPorCM == "TP":
-        fig, ax = plt.subplots()
-        ax.bar(x - width / 2, DoneTP, width, label='TP done')
-        ax.bar(x + width / 2, theoricalTP, width, label='TP to do')
+        bar_done = [x - width / 2, DoneTP, width, 'TP done']
+        bar_to_do = [x + width / 2, theoricalTP, width, 'TP to do']
+        title = 'Progress of TP in ' + course
 
-        ax.set_ylabel('#')
-        ax.set_title('Progress of TP in ' + course)
-        ax.set_xticks(x)
-        ax.set_xticklabels(passed_week)
-        ax.yaxis.set_major_locator(MaxNLocator(integer=True))
 
-        ax.legend()
+    fig, ax = plt.subplots()
+    fig.subplots_adjust(hspace=0.6)
+    ax.bar(bar_done[0], bar_done[1], bar_done[2], label=bar_done[3])
+    ax.bar(bar_to_do[0], bar_to_do[1], bar_to_do[2], label=bar_to_do[3])
 
-        fig.tight_layout()
-        canvas = FigureCanvasTkAgg(fig, master=window)
-        canvas.draw()
+    ax.set_ylabel('#')
+    ax.set_title(title)
+    ax.set_xticks(x)
+    ax.set_xticklabels(passed_week)
+    ax.yaxis.set_major_locator(MaxNLocator(integer=True))
 
-        # Create the toolbar
-        toolbar = NavigationToolbar2Tk(canvas, window, pack_toolbar=False)
-        toolbar.update()
-        # Use grid to place the toolbar and canvas
-        toolbar.grid(row=25, column=2, pady=10)
-        canvas.get_tk_widget().grid(row=5, rowspan=20, column=2, padx=10, pady=10)
+    ax.legend()
+
+    fig.tight_layout()
+
+    canvas = FigureCanvasTkAgg(fig, master=window)
+    canvas.draw()
+
+    # Create the toolbar
+    toolbar = NavigationToolbar2Tk(canvas, window, pack_toolbar=False)
+    toolbar.update()
+    # Use grid to place the toolbar and canvas
+    toolbar.grid(row=25, column=2, pady=10)
+    canvas.get_tk_widget().grid(row=5, rowspan=20, column=2, padx=10, pady=10)
+
 
 def time_from_beginning(window):
     now = datetime.now()
