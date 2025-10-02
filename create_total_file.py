@@ -28,4 +28,5 @@ def create_total_file_function():
     total.to_csv(path, mode='w', index=True, header=True)
     return
 
+create_total_file_function()
 #print(total)
