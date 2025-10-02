@@ -21,6 +21,6 @@ for courses in getattr(course_calendar, actual_list_name):
         mydataset.append([courses, "CM", f"CM{i}", "NO"])
 
 mydataset = pd.DataFrame(mydataset, columns=["Course", "Type", "Session", "Done"])
-mydataset.to_csv(initial_path + "TPCMNUMBERS.csv", mode='w', index=False)
+mydataset.to_csv(initial_path + "/TPCMNUMBERS.csv", mode='w', index=False)
 
 
