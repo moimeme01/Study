@@ -407,7 +407,7 @@ def check_selection(type_var, course_var, label_result):
     doneCourse = "Done" + selected_course
     print(f"Updating: {doneCourse}, type: {selected_type}, week: {currentweek}")
 
-    file = hours_done_path + "".join(doneCourse.split(" ")) + ".csv"
+    file = hours_done_path + "/" + "".join(doneCourse.split(" ")) + ".csv"
     df = pd.read_csv(file, index_col=0)
     df.at[currentweek, selected_type] += 1
     print(df)

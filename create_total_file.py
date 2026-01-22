@@ -9,7 +9,9 @@ def create_total_file_function():
                  'Delta': [],
                  'Course': []}
     myvar = pd.DataFrame(mydataset)
+    print(hours_done_path)
     path = hours_done_path + '/TOTALSTUDY.csv'
+    print(path)
     myvar.to_csv(path, mode='w', index=True, header=True)
 
 

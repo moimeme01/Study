@@ -3,14 +3,8 @@ import os
 import course_calendar
 from settings import *
 
-actual_period = "Q1_2025_2026"
-
-initial_path = '/Users/thibaultvanni/PycharmProjects/Study/' + actual_period
-session_running_path = initial_path + "/session_running"
-hours_done_path = initial_path + '/hours_done_' + actual_period
-
 """
-Dans ce fichier nous créons de manièer automatique, si demandé, les fichiers qui contabiliseront les heures individuelles
+Dans ce fichier nous créons de manière automatique, si demandé, les fichiers qui contabiliseront les heures individuelles
 des cours ainsi que les TP et les CM retravaillés. 
 
 """
